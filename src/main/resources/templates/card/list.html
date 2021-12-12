@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout :: head">
+    <meta charset="UTF-8">
+    <title>Card Page</title>
+</head>
+<body>
+<h3>List of the Card</h3>
+<form id="EditCard">
+    <input type="text" value="edit" onclick="editStudent()">
+</form>
+<table id="books">
+    <caption>List of the Card</caption>
+    <thread>
+        <tr>
+            <th>Student</th>
+            <th>identity</th>
+            <th>NameBook</th>
+            <th>Author</th>
+            <th>DateBorrow</th>
+            <th>DatePaid</th>
+            <th>CodeBorrow</th>
+            <th>Pay</th>
+        </tr>
+    </thread>
+    <tbody>
+    <tr th:each="c : ${cardList}">
+        <td th:text="${c.student.name}"></td>
+        <td th:text="${c.student.identity}"></td>
+        <td th:text="${c.book.name}"></td>
+        <td th:text="${c.book.author}"></td>
+        <td th:text="${c.dateBorrow}"></td>
+        <td th:text="${c.datePaid}"></td>
+        <td th:text="${c.code}"></td>
+        <td>
+            <button th:value="${c.id}" onclick="paidCard(this)" type="submit">Pay</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div>
+    <p th:replace="/layout :: message">Message</p>
+</div>
+<div th:replace="/layout :: footer">Footer Student page</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</body>
+</html>

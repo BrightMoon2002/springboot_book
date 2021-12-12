@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout :: head">
+    <meta charset="UTF-8">
+    <title>List of the Student</title>
+</head>
+<body>
+<h3>List of the Student</h3>
+<form id="createStudent">
+    <input type="text" id="nameStudent" placeholder="name">
+    <input type="text" id="identityStudent" placeholder="identity">
+    <input type="submit" value="Create" onclick="createStudent()">
+</form>
+<table id="books">
+    <caption>List of the Student</caption>
+    <thread>
+        <tr>
+            <th>Name</th>
+            <th>Identity</th>
+            <th>Action</th>
+        </tr>
+    </thread>
+    <tbody>
+    <tr th:each="s : ${studentList}">
+        <td th:text="${s.name}"></td>
+        <td th:text="${s.identity}"></td>
+        <td>
+        <button type="submit" class="deleteStudent" th:value="${s.id}" onclick="deleteStudent(this)">Delete</button>
+        <button type="submit" class="editStudent" th:value="${s.id}" onclick="editStudent(this)">Edit</button>
+        <td>
+    </tr>
+    </tbody>
+</table>
+<div>
+    <p th:replace="/layout :: message"></p>
+</div>
+<div th:replace="/layout :: footer">Footer Student page</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    function createStudent() {
+        let nameStudent = $('#nameStudent').val();
+        let identityStudent = $('#identityStudent').val();
+        let newStudent = {
+            name: nameStudent,
+            identity: identityStudent
+        };
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "POST",
+            data: JSON.stringify(newStudent),
+            url: "/students",
+            success: successCreateStudent
+        });
+        event.preventDefault()
+    }
+
+    function successCreateStudent() {
+        $.ajax({
+            type: "GET",
+            url: "/students/",
+            success: function (data) {
+                let content = '    <tr>\n' +
+                    '        <th>Name</th>\n' +
+                    '        <th>Identity</th>\n' +
+                    '        <th>Delete</th>\n' +
+                    '        <th>Edit</th>\n' +
+                    '    </tr>';
+                for (let i = 0; i < data.length; i++) {
+                    content += getStudent(data[i]);
+                }
+                document.getElementById('books').innerHTML = content;
+            }
+        });
+    }
+
+    function getStudent(student) {
+        return `<tr><td>${student.name}</td><td>${student.identity}</td>` +
+                `<td><button type="submit" class="edit" value="${student.id}" onclick="deleteStudent()">Delete</button></td>` +
+                `<td><button type="submit" class="edit" value="${student.id}" onclick="editStudent()">Edit</button></td>` +
+            `</tr>`
+    }
+
+    function deleteStudent(id) {
+        let idStudent = id.getAttribute("value");
+        $.ajax({
+            type: "DELETE",
+            url: "/students/" +idStudent,
+            success: successCreateStudent
+        });
+        event.preventDefault();
+    }
+
+    function showEditStudent(id) {
+        let idStudent = id.getAttribute("value");
+    }
+
+
+</script>
+</body>
+</html>

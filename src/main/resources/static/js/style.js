@@ -118,10 +118,7 @@ function borrowBook() {
     event.preventDefault();
 }
 function errorCreate() {
-    $.ajax({
-        type: "GET",
-        url: "/error"
-    });
+    window.location = "http://localhost:8080/cards/error"
 }
 
     function createStudent() {
